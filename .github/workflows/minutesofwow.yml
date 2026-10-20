@@ -2,11 +2,20 @@ name: Minutes of WOW daily post
 
 on:
   schedule:
-    - cron: '30 13 * * *' # 7:00 PM IST every day
+    # GitHub sometimes starts scheduled runs late or skips one, so there are
+    # three tries a day. The first one that runs posts; the others see that
+    # today's post is done and stop.
+    - cron: '17 13 * * *' # 6:47 PM IST
+    - cron: '47 14 * * *' # 8:17 PM IST
+    - cron: '23 16 * * *' # 9:53 PM IST
   workflow_dispatch: {} # lets you run it by hand from the Actions tab
 
 permissions:
   contents: write
+
+concurrency:
+  group: minutesofwow-post
+  cancel-in-progress: false
 
 jobs:
   post:
@@ -15,21 +24,38 @@ jobs:
       BRAND: minutesofwow
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+        with:
+          fetch-depth: 50
+      - name: Skip if today's post already went out
+        id: today
+        run: |
+          TODAY=$(TZ=Asia/Kolkata date +%F)
+          echo "date=$TODAY" >> "$GITHUB_OUTPUT"
+          # Any post commit made since midnight India time counts (manual runs included).
+          if git log --since="$TODAY 00:00 +0530" --format=%s | grep -q "Minutes of WOW post"; then
+            echo "done=yes" >> "$GITHUB_OUTPUT"
+            echo "Already posted today ($TODAY)."
+          fi
+      - if: steps.today.outputs.done != 'yes'
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install sharp --no-save
+      - if: steps.today.outputs.done != 'yes'
+        run: npm install sharp --no-save
       - name: Render today's product image
+        if: steps.today.outputs.done != 'yes'
         run: node autopost/run.mjs --dry
       - name: Publish the image so Instagram can download it
+        if: steps.today.outputs.done != 'yes'
         run: |
           git config user.name "formready-bot"
           git config user.email "bot@users.noreply.github.com"
           git add -f autopost/out
-          git commit -m "Daily Minutes of WOW post image" || echo "nothing new"
+          git commit --allow-empty -m "Minutes of WOW post ${{ steps.today.outputs.date }}"
           git pull --rebase
           git push
       - name: Post to Instagram
+        if: steps.today.outputs.done != 'yes'
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IMAGE_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/autopost/out
