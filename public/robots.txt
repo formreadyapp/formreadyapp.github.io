@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://formreadyapp.github.io/sitemap.xml

@@ -32,7 +32,22 @@ if (!BRANDS[BRAND]) {
   console.error(`Unknown BRAND "${BRAND}"`)
   process.exit(1)
 }
-const posts = JSON.parse(readFileSync(BRANDS[BRAND].posts, 'utf8'))
+let posts = JSON.parse(readFileSync(BRANDS[BRAND].posts, 'utf8'))
+
+// Minutes of Wow alternates product posts with recipe posts.
+if (BRAND === 'minutesofwow') {
+  const recipes = JSON.parse(readFileSync(join(here, 'brands', 'minutesofwow', 'recipes.json'), 'utf8'))
+  const mixed = []
+  for (let i = 0; i < Math.max(posts.length, recipes.length); i++) {
+    if (posts[i]) mixed.push(posts[i])
+    if (recipes[i]) mixed.push(recipes[i])
+  }
+  posts = mixed
+}
+
+function recipeCaption(p) {
+  return `${p.name} 🍳\n\nYou need:\n${p.ingredients.map((x) => '• ' + x).join('\n')}\n\nHow to make:\n${p.steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nMade with Minutes of Wow ${p.product}.`
+}
 const args = process.argv.slice(2)
 const dry = args.includes('--dry')
 const dayArg = args.indexOf('--day')
@@ -42,7 +57,7 @@ const dayNumber = dayArg >= 0 ? Number(args[dayArg + 1]) : Math.floor(Date.now()
 const index = ((dayNumber % posts.length) + posts.length) % posts.length
 const post = posts[index]
 const cta = BRANDS[BRAND].cta ? `\n\n${BRANDS[BRAND].cta}` : ''
-const caption = `${post.caption}${cta}\n\n${post.tags.map((t) => '#' + t).join(' ')}`
+const caption = `${post.caption || recipeCaption(post)}${cta}\n\n${post.tags.map((t) => '#' + t).join(' ')}`
 
 const outDir = join(here, 'out')
 mkdirSync(outDir, { recursive: true })

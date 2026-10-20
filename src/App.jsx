@@ -14,12 +14,23 @@ const NAV = [
   { id: 'biodata', icon: I.Ring }
 ]
 
+// Links from the search pages open a tool directly, e.g. ?tool=photo&kb=20&w=200&h=230
+function readLink() {
+  const p = new URLSearchParams(window.location.search)
+  const tool = ['photo', 'resume', 'biodata'].includes(p.get('tool')) ? p.get('tool') : null
+  const num = (k) => (Number(p.get(k)) > 0 ? Number(p.get(k)) : null)
+  const size = num('kb') ? { w: num('w'), h: num('h'), kb: num('kb') } : null
+  return { tool, preset: p.get('preset'), size, lang: p.get('lang') === 'hi' ? 'hi' : null }
+}
+
 export default function App() {
+  const [link] = useState(readLink)
   const [lang, setLang] = useState(() => {
+    if (link.lang) return link.lang
     try { return localStorage.getItem('formready_lang') || 'en' } catch { return 'en' }
   })
-  const [screen, setScreen] = useState('home')
-  const [preset, setPreset] = useState('passport')
+  const [screen, setScreen] = useState(link.tool || 'home')
+  const [preset, setPreset] = useState(link.preset || (link.size ? 'custom' : 'passport'))
   const [sheet, setSheet] = useState(false)
   const [toast, setToast] = useState(false)
   const resolver = useRef(null)
@@ -64,7 +75,10 @@ export default function App() {
             <h1>{t.nav[screen]}</h1>
             <button className="pill" onClick={toggleLang}>{t.language}</button>
           </header>
-          {screen === 'photo' && <PhotoTool key={preset} {...toolProps('photo')} initialPreset={preset} />}
+          {screen === 'photo' && (
+            <PhotoTool key={preset} {...toolProps('photo')} initialPreset={preset}
+              initialSize={preset === 'custom' ? link.size : null} />
+          )}
           {screen === 'resume' && <ResumeTool {...toolProps('resume')} />}
           {screen === 'biodata' && <BiodataTool {...toolProps('biodata')} />}
         </>

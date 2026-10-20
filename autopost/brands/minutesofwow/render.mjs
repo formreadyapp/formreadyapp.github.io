@@ -22,17 +22,69 @@ function wrap(text, max) {
   return lines
 }
 
-// Rough text width so badge chips fit their labels.
-const textWidth = (s, size) => s.length * size * 0.56
+// Rough text width (wide enough for the Linux fonts on GitHub's servers).
+const textWidth = (s, size) => s.length * size * 0.62
+
+// Recipe card: title, small product photo, ingredients and numbered steps.
+async function renderRecipe(post) {
+  const photo = await sharp(join(here, 'img', post.image))
+    .resize(260, 260, { fit: 'contain', background: '#ffffff' })
+    .flatten({ background: '#ffffff' })
+    .png()
+    .toBuffer()
+
+  const parts = []
+  const titleLines = wrap(post.name, 16)
+  parts.push(`<text x="90" y="250" font-family="${SERIF}" font-weight="700" font-size="62" fill="${C.ink}">${titleLines.map((l, i) => `<tspan x="90" dy="${i ? 70 : 0}">${esc(l)}</tspan>`).join('')}</text>`)
+
+  let y = Math.max(250 + titleLines.length * 70 + 40, 470)
+  parts.push(`<text x="90" y="${y}" font-family="${SANS}" font-weight="700" font-size="34" fill="${C.green}">You need</text>`)
+  y += 50
+  for (const item of post.ingredients) {
+    parts.push(`<circle cx="104" cy="${y - 10}" r="6" fill="${C.red}"/><text x="126" y="${y}" font-family="${SANS}" font-size="31" fill="${C.ink}">${esc(item)}</text>`)
+    y += 46
+  }
+  y += 28
+  parts.push(`<text x="90" y="${y}" font-family="${SANS}" font-weight="700" font-size="34" fill="${C.green}">How to make</text>`)
+  y += 50
+  post.steps.forEach((step, i) => {
+    const lines = wrap(step, 44)
+    parts.push(`<circle cx="108" cy="${y - 10}" r="20" fill="${C.green}"/><text x="108" y="${y}" text-anchor="middle" font-family="${SANS}" font-weight="700" font-size="24" fill="#fff">${i + 1}</text>`)
+    parts.push(`<text x="146" y="${y}" font-family="${SANS}" font-size="31" fill="${C.ink}">${lines.map((l, j) => `<tspan x="146" dy="${j ? 40 : 0}">${esc(l)}</tspan>`).join('')}</text>`)
+    y += lines.length * 40 + 18
+  })
+
+  const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350">
+  <rect width="1080" height="1350" fill="${C.bg}"/>
+  <text x="90" y="100" font-family="${SERIF}" font-style="italic" font-weight="700" font-size="44" fill="${C.red}">Minutes of Wow</text>
+  <rect x="90" y="128" width="150" height="50" rx="25" fill="${C.chip}"/>
+  <text x="165" y="162" text-anchor="middle" font-family="${SANS}" font-weight="700" font-size="28" fill="${C.green}">Recipe</text>
+  <rect x="700" y="60" width="300" height="300" rx="28" fill="${C.card}"/>
+  ${parts.join('\n  ')}
+  <rect x="0" y="1190" width="1080" height="160" fill="${C.red}"/>
+  <text x="540" y="1258" text-anchor="middle" font-family="${SANS}" font-weight="700" font-size="${fitSize('Made with Minutes of Wow ' + post.product, 38, 960)}" fill="#ffffff">Made with Minutes of Wow ${esc(post.product)}</text>
+  <text x="540" y="1312" text-anchor="middle" font-family="${SANS}" font-size="32" fill="#ffe3df">Order on Amazon · Link in bio</text>
+</svg>`
+
+  return sharp(Buffer.from(svg))
+    .composite([{ input: photo, left: 720, top: 80 }])
+    .png()
+    .toBuffer()
+}
+
+// Largest font size (up to max) that keeps one line of text within width.
+const fitSize = (s, max, width) => Math.min(max, Math.floor(width / (s.length * 0.62)))
 
 export async function renderFood(post) {
+  if (post.type === 'recipe') return renderRecipe(post)
   const photo = await sharp(join(here, 'img', post.image))
     .resize(860, 610, { fit: 'contain', background: '#ffffff' })
     .flatten({ background: '#ffffff' })
     .png()
     .toBuffer()
 
-  const nameLines = wrap(post.name, 26)
+  const nameLines = wrap(post.name, 24)
   const nameY = 858
   const lineY = nameY + nameLines.length * 64 + 14
 

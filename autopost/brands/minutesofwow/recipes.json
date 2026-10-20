@@ -1,0 +1,56 @@
+[
+  {
+    "type": "recipe",
+    "image": "sprouted-ragi-malt.jpg",
+    "product": "Sprouted Ragi Malt",
+    "name": "Warm ragi malt in 5 minutes",
+    "ingredients": ["2 tbsp Sprouted Ragi Malt", "1 cup milk or water", "Jaggery or sugar to taste"],
+    "steps": ["Mix the ragi malt with 3 to 4 tbsp cold water into a smooth paste.", "Boil the milk or water and add the paste while stirring.", "Cook on low heat for 2 to 3 minutes, stirring all the time.", "Add jaggery, stir well and serve warm."],
+    "tags": ["ragimalt", "ragirecipe", "healthydrink", "milletrecipes", "kidsfood", "recipe"]
+  },
+  {
+    "type": "recipe",
+    "image": "guntur-chilli.jpg",
+    "product": "Guntur Chilli Powder",
+    "name": "Andhra style potato fry",
+    "ingredients": ["3 potatoes, cubed", "2 tbsp wood pressed groundnut oil", "1 tsp Guntur Chilli Powder", "Turmeric, salt, curry leaves", "Mustard and cumin seeds"],
+    "steps": ["Heat the oil and add mustard, cumin and curry leaves.", "Add potatoes, turmeric and salt. Cover and cook till soft.", "Add the chilli powder and fry on medium heat till crisp.", "Serve hot with rice and dal."],
+    "tags": ["potatofry", "andhrarecipes", "gunturchilli", "indianrecipes", "lunchideas", "recipe"]
+  },
+  {
+    "type": "recipe",
+    "image": "rava-idli.jpg",
+    "product": "Rava Idli Mix",
+    "name": "Soft rava idli for breakfast",
+    "ingredients": ["1 cup Rava Idli Mix", "Curd and water, as given on the pack", "Grated carrot and coriander (optional)"],
+    "steps": ["Mix the rava idli mix with curd and water as given on the pack.", "Rest the batter for about 10 minutes.", "Grease the idli plates and pour in the batter.", "Steam for 10 to 12 minutes and serve with chutney."],
+    "tags": ["ravaidli", "idlirecipe", "southindianbreakfast", "breakfastrecipes", "instantbreakfast", "recipe"]
+  },
+  {
+    "type": "recipe",
+    "image": "cinnamon.jpg",
+    "product": "Whole Cinnamon",
+    "name": "Cinnamon masala chai",
+    "ingredients": ["1 cup water and ½ cup milk", "1 small piece Whole Cinnamon", "1 tsp tea leaves, sugar to taste", "Crushed ginger (optional)"],
+    "steps": ["Boil the water with the cinnamon and ginger for 2 minutes.", "Add the tea leaves and boil for 1 more minute.", "Add milk and sugar and bring to a boil.", "Strain and serve hot."],
+    "tags": ["masalachai", "chai", "cinnamon", "dalchini", "chailovers", "recipe"]
+  },
+  {
+    "type": "recipe",
+    "image": "millet-upma.jpg",
+    "product": "Millets Upma Mix",
+    "name": "Millet upma in 3 minutes",
+    "ingredients": ["1 pack Millets Upma Mix", "Water, as given on the pack", "Lemon juice and coriander (optional)"],
+    "steps": ["Boil the water as given on the pack.", "Add the upma mix slowly while stirring.", "Cover and cook on low heat for about 3 minutes.", "Add lemon juice and coriander and serve."],
+    "tags": ["milletupma", "milletrecipes", "healthybreakfast", "quickbreakfast", "upma", "recipe"]
+  },
+  {
+    "type": "recipe",
+    "image": "groundnut-oil.jpg",
+    "product": "Wood Pressed Groundnut Oil",
+    "name": "Simple tadka for dal",
+    "ingredients": ["1 tbsp Wood Pressed Groundnut Oil", "½ tsp mustard and cumin seeds", "2 garlic cloves, 2 dry red chillies", "Curry leaves and a pinch of hing"],
+    "steps": ["Heat the groundnut oil in a small pan.", "Add mustard and cumin and let them splutter.", "Add garlic, red chillies, curry leaves and hing.", "Pour over hot dal and cover for a minute."],
+    "tags": ["dal", "tadka", "woodpressedoil", "groundnutoil", "indiancooking", "recipe"]
+  }
+]

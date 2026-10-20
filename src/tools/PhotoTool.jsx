@@ -40,8 +40,11 @@ async function compress(canvas, maxKB) {
 
 const clamp = (v, m) => Math.max(-m, Math.min(m, v))
 
-export default function PhotoTool({ t, authorize, willPay, initialPreset }) {
-  const start = PRESETS.find((p) => p.id === initialPreset) || PRESETS[0]
+export default function PhotoTool({ t, authorize, willPay, initialPreset, initialSize }) {
+  const base = PRESETS.find((p) => p.id === initialPreset) || PRESETS[0]
+  const start = initialSize
+    ? { ...base, w: initialSize.w || base.w, h: initialSize.h || base.h, kb: initialSize.kb }
+    : base
   const [img, setImg] = useState(null)
   const [presetId, setPresetId] = useState(start.id)
   const [w, setW] = useState(start.w)
