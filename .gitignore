@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.local
+android/build
+android/app/build
+autopost/out
+.claude

@@ -1,0 +1,9 @@
+{
+  "name": "FormReady",
+  "short_name": "FormReady",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3342f0",
+  "icons": []
+}

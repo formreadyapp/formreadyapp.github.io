@@ -1,0 +1,34 @@
+name: Instagram daily post
+
+on:
+  schedule:
+    - cron: '30 6 * * *' # 12:00 PM IST every day
+  workflow_dispatch: {} # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install sharp --no-save
+      - name: Render today's image
+        run: node autopost/run.mjs --dry
+      - name: Publish the image so Instagram can download it
+        run: |
+          git config user.name "formready-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -f autopost/out
+          git commit -m "Daily post image" || echo "nothing new"
+          git push
+      - name: Post to Instagram
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IMAGE_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/autopost/out
+        run: node autopost/run.mjs
