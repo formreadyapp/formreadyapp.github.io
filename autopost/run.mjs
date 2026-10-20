@@ -5,8 +5,8 @@
 //   node autopost/run.mjs                  render, then publish to Instagram (needs the env vars below)
 //
 // Env vars for publishing:
-//   IG_USER_ID       Instagram business account ID (digits)
-//   IG_ACCESS_TOKEN  Page access token with instagram_content_publish permission
+//   IG_ACCESS_TOKEN  Instagram access token with the instagram_business_content_publish permission
+//   IG_USER_ID       optional, found automatically from the token
 //   IMAGE_BASE_URL   Public URL folder where autopost/out/ is reachable, no trailing slash
 //   GRAPH_VERSION    optional, default v23.0
 
@@ -38,14 +38,17 @@ if (dry) {
   process.exit(0)
 }
 
-const { IG_USER_ID, IG_ACCESS_TOKEN, IMAGE_BASE_URL } = process.env
+const { IG_ACCESS_TOKEN, IMAGE_BASE_URL } = process.env
 const version = process.env.GRAPH_VERSION || 'v23.0'
-if (!IG_USER_ID || !IG_ACCESS_TOKEN || !IMAGE_BASE_URL) {
-  console.error('Missing IG_USER_ID, IG_ACCESS_TOKEN or IMAGE_BASE_URL')
+// "Instagram API with Instagram login" tokens use graph.instagram.com.
+// Set IG_API_HOST=graph.facebook.com if you use a Facebook Page token instead.
+const host = process.env.IG_API_HOST || 'graph.instagram.com'
+if (!IG_ACCESS_TOKEN || !IMAGE_BASE_URL) {
+  console.error('Missing IG_ACCESS_TOKEN or IMAGE_BASE_URL')
   process.exit(1)
 }
 
-const base = `https://graph.facebook.com/${version}`
+const base = `https://${host}/${version}`
 
 async function call(path, params, method = 'POST') {
   const url = new URL(`${base}/${path}`)
@@ -59,6 +62,14 @@ async function call(path, params, method = 'POST') {
   const json = await res.json()
   if (!res.ok || json.error) throw new Error(`Instagram API: ${JSON.stringify(json.error || json)}`)
   return json
+}
+
+// Account ID: use IG_USER_ID if you set it, otherwise ask Instagram who the token belongs to.
+let IG_USER_ID = process.env.IG_USER_ID
+if (!IG_USER_ID) {
+  const me = await call('me', { fields: 'user_id,username' }, 'GET')
+  IG_USER_ID = me.user_id || me.id
+  console.log(`Posting as @${me.username}`)
 }
 
 // 1) Create the media container from the public image URL.
