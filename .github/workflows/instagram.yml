@@ -1,8 +1,9 @@
 name: Instagram daily post
 
 on:
-  schedule:
-    - cron: '30 6 * * *' # 12:00 PM IST every day
+  # Paused: Minutes of WOW is a food brand, FormReady tips don't belong there.
+  # schedule:
+  #   - cron: '30 6 * * *' # 12:00 PM IST every day
   workflow_dispatch: {} # lets you run it by hand from the Actions tab
 
 permissions:
