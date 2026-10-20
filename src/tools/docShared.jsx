@@ -50,13 +50,13 @@ export function Field({ label, children }) {
 }
 
 // Fixed bar above the bottom nav holding the main action.
-export function CtaBar({ t, busy, willPay, onClick, disabled, note, children }) {
+export function CtaBar({ t, busy, willPay, onClick, disabled, children }) {
   return (
     <div className="ctabar">
-      {note && <div className="ctanote">{note}</div>}
       {children || (
         <button className="cta" disabled={disabled || busy} onClick={onClick}>
           {busy ? t.working : willPay ? t.payCta.replace('{price}', PRICE) : t.download}
+          {!busy && !willPay && <span className="freepill">{t.freeBadge}</span>}
         </button>
       )}
     </div>

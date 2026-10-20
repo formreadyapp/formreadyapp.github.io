@@ -44,7 +44,7 @@ export default function ResumeTool({ t, authorize, willPay }) {
 
       {view === 'details' && (
         <>
-          <Section title={r.name} open={open === 'basic'} onToggle={() => toggle('basic')}>
+          <Section title={t.personal} open={open === 'basic'} onToggle={() => toggle('basic')}>
             <Field label={r.name}><input value={d.name} onChange={set('name')} /></Field>
             <Field label={r.title}><input value={d.title} onChange={set('title')} /></Field>
             <Field label={r.phone}><input value={d.phone} onChange={set('phone')} inputMode="tel" /></Field>
@@ -95,34 +95,44 @@ export default function ResumeTool({ t, authorize, willPay }) {
       <div className={view === 'preview' ? 'previewbox' : 'previewbox offscreen'}>
         <ScaledPage>
           <div id="doc-page" className={`resume ${style}`}>
-            <div className="r-head">
+            {/* Left column: photo, contact, skills, languages. Right column: the story. */}
+            <aside className="r-side">
               {photo && <img src={photo} alt="" className="r-photo" />}
-              <div>
-                <h1>{d.name}</h1>
-                <h2>{d.title}</h2>
-                <p>{[d.phone, d.email, d.address].filter(Boolean).join('  •  ')}</p>
-              </div>
-            </div>
-            {d.summary && <><h3>{r.summary}</h3><p>{d.summary}</p></>}
-            {edu.length > 0 && <h3>{r.education}</h3>}
-            {edu.map((e, i) => (
-              <p key={i}><b>{e.school}</b>{e.place && `, ${e.place}`}{e.year && ` (${e.year})`}</p>
-            ))}
-            {exp.length > 0 && <h3>{r.experience}</h3>}
-            {exp.map((e, i) => (
-              <div key={i}>
-                <p><b>{e.role}</b>{e.company && `, ${e.company}`}{e.period && ` (${e.period})`}</p>
-                {e.details && <p className="sub">{e.details}</p>}
-              </div>
-            ))}
-            {skills.length > 0 && <><h3>{r.skills.replace(/ \(.*\)/, '')}</h3>
-              <div className="chipsrow">{skills.map((s) => <span key={s}>{s}</span>)}</div></>}
-            {d.languages && <><h3>{r.languages}</h3><p>{d.languages}</p></>}
+              <h3>{r.contact}</h3>
+              {d.phone && <p>{d.phone}</p>}
+              {d.email && <p className="r-break">{d.email}</p>}
+              {d.address && <p>{d.address}</p>}
+              {skills.length > 0 && <>
+                <h3>{r.skills.replace(/ \(.*\)/, '')}</h3>
+                <ul>{skills.map((s) => <li key={s}>{s}</li>)}</ul>
+              </>}
+              {d.languages && <><h3>{r.languages}</h3><p>{d.languages}</p></>}
+            </aside>
+            <section className="r-main">
+              <h1>{d.name}</h1>
+              {d.title && <h2>{d.title}</h2>}
+              {d.summary && <><h3>{r.summary}</h3><p>{d.summary}</p></>}
+              {exp.length > 0 && <h3>{r.experience}</h3>}
+              {exp.map((e, i) => (
+                <div className="r-item" key={i}>
+                  <p className="r-row"><b>{e.role}</b>{e.period && <span>{e.period}</span>}</p>
+                  {e.company && <p className="sub">{e.company}</p>}
+                  {e.details && <p>{e.details}</p>}
+                </div>
+              ))}
+              {edu.length > 0 && <h3>{r.education}</h3>}
+              {edu.map((e, i) => (
+                <div className="r-item" key={i}>
+                  <p className="r-row"><b>{e.school}</b>{e.year && <span>{e.year}</span>}</p>
+                  {e.place && <p className="sub">{e.place}</p>}
+                </div>
+              ))}
+            </section>
           </div>
         </ScaledPage>
       </div>
 
-      <CtaBar t={t} busy={busy} willPay={willPay} onClick={onDownload} note={willPay ? null : t.freeBadge} />
+      <CtaBar t={t} busy={busy} willPay={willPay} onClick={onDownload} />
     </div>
   )
 }

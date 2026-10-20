@@ -14,6 +14,10 @@ export const strings = {
     seg: { details: 'Details', preview: 'Preview' },
     dragHint: 'Drag the photo to position it',
     chooseCta: 'Choose a photo',
+    chooseSign: 'Choose signature photo',
+    signTip: 'Sign on plain white paper with a dark pen, then take a straight photo in good light.',
+    cleanPaper: 'Make paper white',
+    personal: 'Personal details',
     changePhoto: 'Change photo',
     editSize: 'Edit size',
     home: {
@@ -57,7 +61,7 @@ export const strings = {
     pickFirst: 'Choose a photo first',
     resume: {
       name: 'Full name', title: 'Job title', phone: 'Phone', email: 'Email', address: 'Address',
-      summary: 'About you', education: 'Education', experience: 'Experience', skills: 'Skills (comma separated)',
+      summary: 'About you', contact: 'Contact', education: 'Education', experience: 'Experience', skills: 'Skills (comma separated)',
       languages: 'Languages', school: 'Course / Degree', place: 'College / School', year: 'Year',
       role: 'Role', company: 'Company', period: 'Period', details: 'Details', photo: 'Photo (optional)'
     },
@@ -83,6 +87,10 @@ export const strings = {
     seg: { details: 'जानकारी', preview: 'प्रीव्यू' },
     dragHint: 'फोटो को खींचकर सही जगह लगाएँ',
     chooseCta: 'फोटो चुनें',
+    chooseSign: 'हस्ताक्षर की फोटो चुनें',
+    signTip: 'सफ़ेद कागज़ पर गहरे रंग के पेन से साइन करें, फिर अच्छी रोशनी में सीधी फोटो लें।',
+    cleanPaper: 'कागज़ सफ़ेद करें',
+    personal: 'व्यक्तिगत जानकारी',
     changePhoto: 'फोटो बदलें',
     editSize: 'साइज़ बदलें',
     home: {
@@ -126,7 +134,7 @@ export const strings = {
     pickFirst: 'पहले फोटो चुनें',
     resume: {
       name: 'पूरा नाम', title: 'पद', phone: 'फोन', email: 'ईमेल', address: 'पता',
-      summary: 'अपने बारे में', education: 'शिक्षा', experience: 'अनुभव', skills: 'कौशल (कॉमा से अलग करें)',
+      summary: 'अपने बारे में', contact: 'संपर्क', education: 'शिक्षा', experience: 'अनुभव', skills: 'कौशल (कॉमा से अलग करें)',
       languages: 'भाषाएँ', school: 'कोर्स / डिग्री', place: 'कॉलेज / स्कूल', year: 'वर्ष',
       role: 'पद', company: 'कंपनी', period: 'अवधि', details: 'विवरण', photo: 'फोटो (वैकल्पिक)'
     },

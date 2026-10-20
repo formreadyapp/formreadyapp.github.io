@@ -9,6 +9,25 @@ const GROUPS = [
   { id: 'family', keys: ['father', 'mother', 'siblings', 'address', 'contact'] }
 ]
 const FIELDS = GROUPS.flatMap((g) => g.keys)
+
+// Phone pickers for date and time, number keypad for the contact.
+const INPUT = {
+  dob: { type: 'date' },
+  tob: { type: 'time' },
+  contact: { type: 'tel', inputMode: 'tel' }
+}
+
+// Date and time pickers give 1996-03-12 and 14:30; show them the way people write them.
+function show(key, value, lang) {
+  const locale = lang === 'hi' ? 'hi-IN' : 'en-IN'
+  if (key === 'dob' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return new Date(`${value}T00:00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
+  }
+  if (key === 'tob' && /^\d{2}:\d{2}$/.test(value)) {
+    return new Date(`2000-01-01T${value}:00`).toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit' })
+  }
+  return value
+}
 const COLORS = [
   { id: 'maroon', color: '#7a1f2b' },
   { id: 'gold', color: '#a87414' },
@@ -58,7 +77,9 @@ export default function BiodataTool({ t, authorize, willPay, lang }) {
           {GROUPS.map((g) => (
             <Section key={g.id} title={t.biodataGroups[g.id]} open={open === g.id} onToggle={() => toggle(g.id)}>
               {g.keys.map((k) => (
-                <Field key={k} label={b[k]}><input value={d[k] || ''} onChange={set(k)} /></Field>
+                <Field key={k} label={b[k]}>
+                  <input value={d[k] || ''} onChange={set(k)} {...(INPUT[k] || {})} />
+                </Field>
               ))}
             </Section>
           ))}
@@ -73,13 +94,13 @@ export default function BiodataTool({ t, authorize, willPay, lang }) {
             {blessing && <p className="blessing">॥ श्री गणेशाय नमः ॥</p>}
             <h1>{lang === 'hi' ? 'विवाह बायोडाटा' : 'Marriage Biodata'}</h1>
             <div className="b-top">
-              <h2>{d.name || b.name}</h2>
+              <h2>{d.name}</h2>
               {photo && <img src={photo} alt="" className="b-photo" />}
             </div>
             <table>
               <tbody>
                 {FIELDS.filter((k) => d[k]).map((k) => (
-                  <tr key={k}><th>{b[k]}</th><td>{d[k]}</td></tr>
+                  <tr key={k}><th>{b[k]}</th><td>{show(k, d[k], lang)}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -87,7 +108,7 @@ export default function BiodataTool({ t, authorize, willPay, lang }) {
         </ScaledPage>
       </div>
 
-      <CtaBar t={t} busy={busy} willPay={willPay} onClick={onDownload} note={willPay ? null : t.freeBadge} />
+      <CtaBar t={t} busy={busy} willPay={willPay} onClick={onDownload} />
     </div>
   )
 }

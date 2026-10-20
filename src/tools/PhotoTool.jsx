@@ -39,6 +39,25 @@ async function compress(canvas, maxKB) {
 }
 
 const clamp = (v, m) => Math.max(-m, Math.min(m, v))
+const isSignature = (id) => id === 'sign' || id === 'sign2'
+
+// Turns grey or shadowed paper white and makes the ink a little darker,
+// so signature scans pass form checks. Paper brightness is estimated from the image itself.
+function whitenPaper(ctx, W, H, bg) {
+  const data = ctx.getImageData(0, 0, W, H)
+  const px = data.data
+  let sum = 0
+  for (let i = 0; i < px.length; i += 4) sum += 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]
+  const threshold = (sum / (px.length / 4)) * 0.82
+  const r = parseInt(bg.slice(1, 3), 16), g = parseInt(bg.slice(3, 5), 16), b = parseInt(bg.slice(5, 7), 16)
+  for (let i = 0; i < px.length; i += 4) {
+    const lum = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]
+    if (lum > threshold) { px[i] = r; px[i + 1] = g; px[i + 2] = b } else {
+      px[i] *= 0.7; px[i + 1] *= 0.7; px[i + 2] *= 0.7
+    }
+  }
+  ctx.putImageData(data, 0, 0)
+}
 
 export default function PhotoTool({ t, authorize, willPay, initialPreset, initialSize }) {
   const base = PRESETS.find((p) => p.id === initialPreset) || PRESETS[0]
@@ -54,57 +73,81 @@ export default function PhotoTool({ t, authorize, willPay, initialPreset, initia
   const [zoom, setZoom] = useState(1)
   const [off, setOff] = useState({ x: 0, y: 0 }) // pan, in output pixels
   const [editing, setEditing] = useState(false)
+  const [clean, setClean] = useState(isSignature(start.id))
+  const [dragged, setDragged] = useState(false)
   const [result, setResult] = useState(null)
   const [busy, setBusy] = useState(false)
   const canvasRef = useRef(null)
+  const stageRef = useRef(null)
   const drag = useRef(null)
 
   const W = Math.max(20, Math.min(2000, Number(w) || 0))
   const H = Math.max(20, Math.min(2000, Number(h) || 0))
+  const sign = isSignature(presetId)
+
+  // Zoom 1 fills the frame; the lowest zoom shows the whole picture.
+  const minZoom = img
+    ? Math.min(1, Math.min(W / img.width, H / img.height) / Math.max(W / img.width, H / img.height))
+    : 1
 
   const pickPreset = (id) => {
     const p = PRESETS.find((x) => x.id === id)
     setPresetId(id); setW(p.w); setH(p.h); setKb(p.kb)
-    setEditing(id === 'custom'); setOff({ x: 0, y: 0 })
+    setEditing(id === 'custom'); setOff({ x: 0, y: 0 }); setZoom(1)
+    setClean(isSignature(id))
   }
 
   useEffect(() => {
     if (!img) return
     const c = canvasRef.current
     c.width = W; c.height = H
-    const ctx = c.getContext('2d')
+    const ctx = c.getContext('2d', { willReadFrequently: true })
     ctx.fillStyle = bg
     ctx.fillRect(0, 0, W, H)
     const base = Math.max(W / img.width, H / img.height) * zoom
     const dw = img.width * base, dh = img.height * base
-    const dx = (W - dw) / 2 + clamp(off.x, Math.max(0, (dw - W) / 2))
-    const dy = (H - dh) / 2 + clamp(off.y, Math.max(0, (dh - H) / 2))
+    const dx = (W - dw) / 2 + clamp(off.x, Math.abs(dw - W) / 2)
+    const dy = (H - dh) / 2 + clamp(off.y, Math.abs(dh - H) / 2)
     ctx.drawImage(img, dx, dy, dw, dh)
+    if (clean) whitenPaper(ctx, W, H, bg)
+
+    // Show the result as large as the screen allows, even when it is only 140×60 pixels.
+    const boxW = (stageRef.current?.clientWidth || 320) - 28
+    const scale = Math.min(boxW / W, (window.innerHeight * 0.44) / H)
+    c.style.width = `${Math.round(W * scale)}px`
+    c.style.height = `${Math.round(H * scale)}px`
 
     let cancelled = false
     const timer = setTimeout(() => {
       compress(c, Number(kb) || 50).then((r) => { if (!cancelled) setResult(r) })
     }, 150)
     return () => { cancelled = true; clearTimeout(timer) }
-  }, [img, W, H, kb, bg, zoom, off])
+  }, [img, W, H, kb, bg, zoom, off, clean])
 
   const onFile = async (e) => {
     const f = e.target.files?.[0]
     if (!f) return
     setImg(await loadImage(f))
-    setZoom(1); setOff({ x: 0, y: 0 })
+    setZoom(1); setOff({ x: 0, y: 0 }); setDragged(false)
     e.target.value = ''
   }
 
   const onDown = (e) => {
     e.currentTarget.setPointerCapture(e.pointerId)
     drag.current = { x: e.clientX, y: e.clientY, ox: off.x, oy: off.y }
+    setDragged(true)
   }
   const onMove = (e) => {
     if (!drag.current) return
     const rect = canvasRef.current.getBoundingClientRect()
     const k = W / rect.width
-    setOff({ x: drag.current.ox + (e.clientX - drag.current.x) * k, y: drag.current.oy + (e.clientY - drag.current.y) * k })
+    // Keep the stored position inside the limits, so dragging back responds at once.
+    const s = Math.max(W / img.width, H / img.height) * zoom
+    const mx = Math.abs(img.width * s - W) / 2, my = Math.abs(img.height * s - H) / 2
+    setOff({
+      x: clamp(drag.current.ox + (e.clientX - drag.current.x) * k, mx),
+      y: clamp(drag.current.oy + (e.clientY - drag.current.y) * k, my)
+    })
   }
   const onUp = () => { drag.current = null }
 
@@ -117,7 +160,6 @@ export default function PhotoTool({ t, authorize, willPay, initialPreset, initia
   }
 
   const kbNow = result ? (result.blob.size / 1024).toFixed(1) : null
-  const aspect = `${W} / ${H}`
 
   return (
     <div className="screen">
@@ -142,30 +184,36 @@ export default function PhotoTool({ t, authorize, willPay, initialPreset, initia
         </div>
       )}
 
-      <div className="stage">
+      <div className="stage" ref={stageRef}>
         {!img ? (
           <label className="empty">
             <input type="file" accept="image/*" onChange={onFile} />
             <span className="empty-ic"><I.Camera /></span>
-            <b>{t.chooseCta}</b>
-            <small>{t.presetNote}</small>
+            <b>{sign ? t.chooseSign : t.chooseCta}</b>
+            <small>{sign ? t.signTip : t.presetNote}</small>
           </label>
         ) : (
           <>
-            <div className="frame" style={{ aspectRatio: aspect, maxHeight: '44vh' }}>
+            <div className="frame">
               <canvas ref={canvasRef}
                 onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} />
-              <span className="drag-hint"><I.Move /> {t.dragHint}</span>
+              {!dragged && <span className="drag-hint"><I.Move /> {t.dragHint}</span>}
             </div>
             <div className="zoomrow">
               <I.Image style={{ width: 16, height: 16 }} />
-              <input type="range" aria-label={t.zoom} min="1" max="3" step="0.01" value={zoom} onChange={(e) => setZoom(+e.target.value)} />
+              <input type="range" aria-label={t.zoom} min={minZoom.toFixed(2)} max="3" step="0.01" value={zoom} onChange={(e) => setZoom(+e.target.value)} />
               <I.Image style={{ width: 24, height: 24 }} />
             </div>
-            <label className="textbtn center">
-              <input type="file" accept="image/*" onChange={onFile} hidden />
-              {t.changePhoto}
-            </label>
+            <div className="toolrow">
+              <label className="switch">
+                <input type="checkbox" checked={clean} onChange={(e) => setClean(e.target.checked)} />
+                <i /> {t.cleanPaper}
+              </label>
+              <label className="textbtn">
+                <input type="file" accept="image/*" onChange={onFile} hidden />
+                {t.changePhoto}
+              </label>
+            </div>
           </>
         )}
       </div>
@@ -178,12 +226,11 @@ export default function PhotoTool({ t, authorize, willPay, initialPreset, initia
         </div>
       )}
 
-      <CtaBar t={t} busy={busy} willPay={willPay} onClick={onDownload} disabled={!img || !result}
-        note={willPay ? null : t.freeBadge}>
+      <CtaBar t={t} busy={busy} willPay={willPay} onClick={onDownload} disabled={!img || !result}>
         {!img ? (
           <label className="cta">
             <input type="file" accept="image/*" onChange={onFile} hidden />
-            {t.chooseCta}
+            {sign ? t.chooseSign : t.chooseCta}
           </label>
         ) : null}
       </CtaBar>
