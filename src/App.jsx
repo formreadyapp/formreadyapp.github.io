@@ -1,11 +1,12 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, lazy, Suspense } from 'react'
 import { strings } from './i18n.js'
-import QRCode from 'qrcode'
 import { PRICE, DEMO_MODE, PAY_MODE, upiLink, hasFreeTry, requestPayment } from './payments.js'
-import PhotoTool from './tools/PhotoTool.jsx'
-import ResumeTool from './tools/ResumeTool.jsx'
-import BiodataTool from './tools/BiodataTool.jsx'
 import * as I from './icons.jsx'
+
+// Each tool loads only when opened, so the home screen appears quickly.
+const PhotoTool = lazy(() => import('./tools/PhotoTool.jsx'))
+const ResumeTool = lazy(() => import('./tools/ResumeTool.jsx'))
+const BiodataTool = lazy(() => import('./tools/BiodataTool.jsx'))
 
 const NAV = [
   { id: 'home', icon: I.Home },
@@ -75,12 +76,14 @@ export default function App() {
             <h1>{t.nav[screen]}</h1>
             <button className="pill" onClick={toggleLang}>{t.language}</button>
           </header>
-          {screen === 'photo' && (
-            <PhotoTool key={preset} {...toolProps('photo')} initialPreset={preset}
-              initialSize={preset === 'custom' ? link.size : null} />
-          )}
-          {screen === 'resume' && <ResumeTool {...toolProps('resume')} />}
-          {screen === 'biodata' && <BiodataTool {...toolProps('biodata')} />}
+          <Suspense fallback={<p className="loading">{t.working}</p>}>
+            {screen === 'photo' && (
+              <PhotoTool key={preset} {...toolProps('photo')} initialPreset={preset}
+                initialSize={preset === 'custom' ? link.size : null} />
+            )}
+            {screen === 'resume' && <ResumeTool {...toolProps('resume')} />}
+            {screen === 'biodata' && <BiodataTool {...toolProps('biodata')} />}
+          </Suspense>
         </>
       )}
 
@@ -126,7 +129,9 @@ function UpiPanel({ t, onPaid }) {
   const valid = /^\d{12}$/.test(utr)
 
   useEffect(() => {
-    QRCode.toDataURL(link, { width: 360, margin: 1, color: { dark: '#11142b', light: '#ffffff' } }).then(setQr)
+    import('qrcode').then(({ default: QRCode }) =>
+      QRCode.toDataURL(link, { width: 360, margin: 1, color: { dark: '#11142b', light: '#ffffff' } })
+    ).then(setQr)
   }, [link])
 
   const confirm = () => {
@@ -200,6 +205,39 @@ function Home({ t, onLang, open }) {
         <li><I.Check /> {t.home.t2}</li>
         <li><I.Check /> {t.price}</li>
       </ul>
+
+      <h3 className="sec">{t.home.howTitle}</h3>
+      <ol className="how">
+        {t.home.how.map((s) => <li key={s}>{s}</li>)}
+      </ol>
+
+      <h3 className="sec">{t.home.faqTitle}</h3>
+      <div className="faq">
+        {t.home.faq.map(({ q, a }) => (
+          <details key={q}>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </div>
+
+      <h3 className="sec">{t.home.guidesTitle}</h3>
+      <ul className="guides">
+        {GUIDES.map(([slug, label]) => <li key={slug}><a href={`./${slug}/`}>{label}</a></li>)}
+      </ul>
     </>
   )
 }
+
+// The search pages built by scripts/seo-pages.mjs.
+const GUIDES = [
+  ['resize-photo-to-20kb', 'Resize photo to 20 KB'],
+  ['resize-photo-to-50kb', 'Resize photo to 50 KB'],
+  ['resize-photo-to-100kb', 'Resize photo to 100 KB'],
+  ['resize-signature-online', 'Resize signature online'],
+  ['passport-size-photo-maker', 'Passport size photo maker'],
+  ['compress-photo-for-exam-form', 'Compress photo for exam form'],
+  ['resume-maker-pdf', 'Resume maker (PDF)'],
+  ['marriage-biodata-maker', 'Marriage biodata maker'],
+  ['photo-size-kam-kaise-kare', 'फोटो का साइज़ कम कैसे करें']
+]

@@ -1,6 +1,4 @@
 import { Capacitor } from '@capacitor/core'
-import { Filesystem, Directory } from '@capacitor/filesystem'
-import { Share } from '@capacitor/share'
 
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
@@ -15,6 +13,10 @@ function blobToBase64(blob) {
 // (WebView cannot download blobs directly).
 export async function saveFile(blob, filename) {
   if (Capacitor.isNativePlatform()) {
+    const [{ Filesystem, Directory }, { Share }] = await Promise.all([
+      import('@capacitor/filesystem'),
+      import('@capacitor/share')
+    ])
     const data = await blobToBase64(blob)
     const written = await Filesystem.writeFile({ path: filename, data, directory: Directory.Cache })
     await Share.share({ title: filename, url: written.uri, dialogTitle: 'Save or share' })

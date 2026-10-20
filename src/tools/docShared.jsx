@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import html2canvas from 'html2canvas'
-import { jsPDF } from 'jspdf'
 import { saveFile } from '../saveFile.js'
 import { PRICE } from '../payments.js'
 
@@ -27,6 +25,8 @@ export function ScaledPage({ children }) {
 
 // Renders #doc-page to a one-page A4 PDF and saves it.
 export async function exportPdf(filename) {
+  // Loaded only when someone downloads a PDF; these libraries are large.
+  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import('html2canvas'), import('jspdf')])
   const el = document.getElementById('doc-page')
   const canvas = await html2canvas(el, {
     scale: 2,

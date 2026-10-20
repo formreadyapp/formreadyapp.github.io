@@ -27,7 +27,23 @@ export const strings = {
       what: 'What do you need?',
       passport: 'Passport photo', exam: 'Exam form photo', sign: 'Signature',
       resume: 'Resume', biodata: 'Marriage biodata',
-      t1: 'Files never leave your phone', t2: 'First download in each tool is free'
+      t1: 'Files never leave your phone', t2: 'First download in each tool is free',
+      howTitle: 'How it works',
+      how: [
+        'Pick what you need: passport photo, exam photo, signature, resume or biodata.',
+        'Choose your photo or fill in your details. Set the size and KB limit your form asks for.',
+        'Check the preview and file size, then download.'
+      ],
+      faqTitle: 'Common questions',
+      faq: [
+        { q: 'Is FormReady free?', a: 'Your first download in each tool is free. After that it is ₹10 per download. No sign-up needed.' },
+        { q: 'Are my photos uploaded anywhere?', a: 'No. Everything happens on your own phone or computer. Your photos and details never leave your device.' },
+        { q: 'How do I make my photo under 20 KB or 50 KB?', a: 'Open Photo, pick a size or tap "Edit size" and set the maximum KB. FormReady compresses the photo and shows the final size before you download.' },
+        { q: 'What photo size does my exam need?', a: 'Every exam publishes its own size and KB limit in its notification. Check it, then enter the same values with "Edit size".' },
+        { q: 'How do I resize my signature?', a: 'Sign on plain white paper with a dark pen and take a straight photo. Choose Signature. "Make paper white" cleans grey or shadowed paper automatically.' },
+        { q: 'Can I make a resume or marriage biodata?', a: 'Yes. Fill in your details, check the preview and download a PDF. Hindi is supported.' }
+      ],
+      guidesTitle: 'Guides'
     },
     tabs: { photo: 'Photo & Signature', resume: 'Resume', biodata: 'Biodata' },
     freeTry: 'Your first download here is free',
@@ -100,7 +116,23 @@ export const strings = {
       what: 'आपको क्या चाहिए?',
       passport: 'पासपोर्ट फोटो', exam: 'परीक्षा फॉर्म फोटो', sign: 'हस्ताक्षर',
       resume: 'रिज़्यूमे', biodata: 'विवाह बायोडाटा',
-      t1: 'फ़ाइलें आपके फोन से बाहर नहीं जातीं', t2: 'हर टूल में पहला डाउनलोड मुफ़्त'
+      t1: 'फ़ाइलें आपके फोन से बाहर नहीं जातीं', t2: 'हर टूल में पहला डाउनलोड मुफ़्त',
+      howTitle: 'कैसे काम करता है',
+      how: [
+        'चुनें आपको क्या चाहिए: पासपोर्ट फोटो, परीक्षा फोटो, हस्ताक्षर, रिज़्यूमे या बायोडाटा।',
+        'फोटो चुनें या अपनी जानकारी भरें। फॉर्म के अनुसार साइज़ और KB सीमा सेट करें।',
+        'प्रीव्यू और फ़ाइल साइज़ देखें, फिर डाउनलोड करें।'
+      ],
+      faqTitle: 'आम सवाल',
+      faq: [
+        { q: 'क्या FormReady मुफ़्त है?', a: 'हर टूल में पहला डाउनलोड मुफ़्त है। उसके बाद ₹10 प्रति डाउनलोड। साइन-अप की ज़रूरत नहीं।' },
+        { q: 'क्या मेरी फोटो कहीं अपलोड होती है?', a: 'नहीं। सब कुछ आपके अपने फोन या कंप्यूटर पर होता है। आपकी फोटो और जानकारी आपके डिवाइस से बाहर नहीं जाती।' },
+        { q: 'फोटो को 20 KB या 50 KB से कम कैसे करें?', a: 'फोटो खोलें, साइज़ चुनें या "साइज़ बदलें" में अधिकतम KB डालें। FormReady फोटो को छोटा करके डाउनलोड से पहले साइज़ दिखाता है।' },
+        { q: 'मेरी परीक्षा के लिए फोटो का साइज़ क्या है?', a: 'हर परीक्षा अपनी सूचना में साइज़ और KB सीमा बताती है। उसे देखें और "साइज़ बदलें" में वही मान डालें।' },
+        { q: 'हस्ताक्षर का साइज़ कैसे बदलें?', a: 'सफ़ेद कागज़ पर गहरे पेन से साइन करें और सीधी फोटो लें। हस्ताक्षर चुनें। "कागज़ सफ़ेद करें" धूसर कागज़ को अपने आप साफ़ कर देता है।' },
+        { q: 'क्या मैं रिज़्यूमे या विवाह बायोडाटा बना सकता हूँ?', a: 'हाँ। जानकारी भरें, प्रीव्यू देखें और PDF डाउनलोड करें। हिंदी भी उपलब्ध है।' }
+      ],
+      guidesTitle: 'गाइड'
     },
     tabs: { photo: 'फोटो और हस्ताक्षर', resume: 'रिज़्यूमे', biodata: 'बायोडाटा' },
     freeTry: 'यहाँ पहला डाउनलोड मुफ़्त है',

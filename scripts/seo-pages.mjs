@@ -105,6 +105,21 @@ const PAGES = [
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
+// Question-and-answer data for search engines, built from the page's own text.
+function faqSchema(p) {
+  const hi = p.lang === 'hi'
+  const qa = [
+    [hi ? `${p.h1}?` : `How do I ${p.h1.charAt(0).toLowerCase()}${p.h1.slice(1)}?`, p.steps.join(' ')],
+    [hi ? 'क्या यह मुफ़्त है?' : 'Is it free?', hi ? 'हर टूल में पहला डाउनलोड मुफ़्त है, फिर ₹10 प्रति डाउनलोड।' : 'Your first download in each tool is free, then ₹10 per download.'],
+    [hi ? 'क्या मेरी फोटो अपलोड होती है?' : 'Are my files uploaded?', hi ? 'नहीं, सब कुछ आपके फोन पर ही होता है।' : 'No. Everything happens on your phone; nothing is uploaded.']
+  ]
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: qa.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
+  }
+}
+
 function page(p) {
   const hi = p.lang === 'hi'
   const others = PAGES.filter((o) => o.slug !== p.slug)
@@ -118,8 +133,14 @@ function page(p) {
 <meta name="description" content="${esc(p.desc)}">
 <link rel="canonical" href="${SITE}/${p.slug}/">
 <link rel="icon" type="image/svg+xml" href="../logo.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FormReady">
 <meta property="og:title" content="${esc(p.title)}">
 <meta property="og:description" content="${esc(p.desc)}">
+<meta property="og:url" content="${SITE}/${p.slug}/">
+<meta property="og:image" content="${SITE}/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${JSON.stringify(faqSchema(p))}</script>
 <style>
 :root{--blue:#3342f0;--ink:#11142b;--muted:#5f6484;--bg:#f2f4fb}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans Devanagari',sans-serif}

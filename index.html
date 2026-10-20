@@ -4,25 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#3342f0" />
-    <meta name="description" content="Passport photo maker, exam form photo and signature resizer, resume and marriage biodata maker. Fast, simple, ₹10 per download." />
+    <title>FormReady: Passport Photo & Signature Resizer</title>
+    <meta name="description" content="Resize your photo and signature to the exact size and KB limit for exam and job forms. Passport photo maker, resume and marriage biodata PDF maker. Works on your phone." />
+    <link rel="canonical" href="https://formreadyapp.github.io/" />
     <link rel="icon" type="image/svg+xml" href="./logo.svg" />
     <link rel="manifest" href="./manifest.json" />
-    <title>FormReady: Passport Photo & Signature Resizer</title>
+
+    <!-- Link previews on WhatsApp, Facebook, X -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FormReady" />
+    <meta property="og:title" content="FormReady: Passport Photo & Signature Resizer" />
+    <meta property="og:description" content="Photo and signature at the exact size and KB limit for any form. Resume and biodata PDF maker." />
+    <meta property="og:url" content="https://formreadyapp.github.io/" />
+    <meta property="og:image" content="https://formreadyapp.github.io/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://formreadyapp.github.io/og-image.png" />
+
+    <!-- Structured data: what this site is, and its common questions -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FormReady",
+      "url": "https://formreadyapp.github.io/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "inLanguage": ["en", "hi"],
+      "description": "Resize photos and signatures to the exact size and KB limit for exam and job forms. Passport photo, resume and marriage biodata maker.",
+      "offers": { "@type": "Offer", "price": "10", "priceCurrency": "INR", "description": "First download in each tool is free, then ₹10 per download" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Is FormReady free?", "acceptedAnswer": { "@type": "Answer", "text": "Your first download in each tool is free. After that it is ₹10 per download. No sign-up needed." } },
+        { "@type": "Question", "name": "Are my photos uploaded anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. Everything happens on your own phone or computer. Your photos and details never leave your device." } },
+        { "@type": "Question", "name": "How do I make my photo under 20 KB or 50 KB?", "acceptedAnswer": { "@type": "Answer", "text": "Open Photo, pick a size or tap Edit size and set the maximum KB. FormReady compresses the photo and shows the final size before you download." } },
+        { "@type": "Question", "name": "What photo size does my exam need?", "acceptedAnswer": { "@type": "Answer", "text": "Every exam publishes its own size and KB limit in its notification. Check it, then enter the same values with Edit size." } },
+        { "@type": "Question", "name": "How do I resize my signature?", "acceptedAnswer": { "@type": "Answer", "text": "Sign on plain white paper with a dark pen and take a straight photo. Choose Signature. Make paper white cleans grey or shadowed paper automatically." } },
+        { "@type": "Question", "name": "Can I make a resume or marriage biodata?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Fill in your details, check the preview and download a PDF. Hindi is supported." } }
+      ]
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <!-- Plain links so search engines can find the tool pages. -->
-    <noscript>
-      <a href="./resize-photo-to-20kb/">Resize photo to 20 KB</a>
-      <a href="./resize-photo-to-50kb/">Resize photo to 50 KB</a>
-      <a href="./resize-photo-to-100kb/">Resize photo to 100 KB</a>
-      <a href="./resize-signature-online/">Resize signature</a>
-      <a href="./passport-size-photo-maker/">Passport size photo maker</a>
-      <a href="./compress-photo-for-exam-form/">Compress photo for exam form</a>
-      <a href="./resume-maker-pdf/">Resume maker PDF</a>
-      <a href="./marriage-biodata-maker/">Marriage biodata maker</a>
-      <a href="./photo-size-kam-kaise-kare/">फोटो का साइज़ कम कैसे करें</a>
-    </noscript>
+    <div id="root">
+      <!-- Shown until the app starts, and read by search engines. The app replaces it. -->
+      <main style="max-width:520px;margin:0 auto;padding:24px 16px;font-family:system-ui,sans-serif;color:#11142b">
+        <h1>FormReady: photo and signature ready for any form</h1>
+        <p>Resize your photo and signature to the exact size and KB limit your exam or job form asks for. Make a passport size photo, a resume PDF or a marriage biodata in minutes, in English or Hindi. Your files stay on your phone.</p>
+        <h2>Tools</h2>
+        <ul>
+          <li><a href="./resize-photo-to-20kb/">Resize photo to 20 KB</a></li>
+          <li><a href="./resize-photo-to-50kb/">Resize photo to 50 KB</a></li>
+          <li><a href="./resize-photo-to-100kb/">Resize photo to 100 KB</a></li>
+          <li><a href="./resize-signature-online/">Resize signature online</a></li>
+          <li><a href="./passport-size-photo-maker/">Passport size photo maker</a></li>
+          <li><a href="./compress-photo-for-exam-form/">Compress photo for exam form</a></li>
+          <li><a href="./resume-maker-pdf/">Resume maker (PDF)</a></li>
+          <li><a href="./marriage-biodata-maker/">Marriage biodata maker</a></li>
+          <li><a href="./photo-size-kam-kaise-kare/">फोटो का साइज़ कम कैसे करें</a></li>
+        </ul>
+        <p>First download in each tool is free, then ₹10 per download.</p>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
