@@ -14,9 +14,25 @@ import { readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { renderPost } from './render.mjs'
+import { renderFood } from './brands/minutesofwow/render.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const posts = JSON.parse(readFileSync(join(here, 'posts.json'), 'utf8'))
+
+// BRAND picks the post list and design: formready (app tips) or minutesofwow (food products).
+const BRAND = process.env.BRAND || 'formready'
+const BRANDS = {
+  formready: { posts: join(here, 'posts.json'), render: renderPost },
+  minutesofwow: {
+    posts: join(here, 'brands', 'minutesofwow', 'posts.json'),
+    render: renderFood,
+    cta: '🛒 Order on Amazon: link in bio\n📦 Bulk & retail orders: WhatsApp us (number in bio)\n🚚 Delivery across India'
+  }
+}
+if (!BRANDS[BRAND]) {
+  console.error(`Unknown BRAND "${BRAND}"`)
+  process.exit(1)
+}
+const posts = JSON.parse(readFileSync(BRANDS[BRAND].posts, 'utf8'))
 const args = process.argv.slice(2)
 const dry = args.includes('--dry')
 const dayArg = args.indexOf('--day')
@@ -25,13 +41,14 @@ const dayArg = args.indexOf('--day')
 const dayNumber = dayArg >= 0 ? Number(args[dayArg + 1]) : Math.floor(Date.now() / 86400000)
 const index = ((dayNumber % posts.length) + posts.length) % posts.length
 const post = posts[index]
-const caption = `${post.caption}\n\n${post.tags.map((t) => '#' + t).join(' ')}`
+const cta = BRANDS[BRAND].cta ? `\n\n${BRANDS[BRAND].cta}` : ''
+const caption = `${post.caption}${cta}\n\n${post.tags.map((t) => '#' + t).join(' ')}`
 
 const outDir = join(here, 'out')
 mkdirSync(outDir, { recursive: true })
-const file = `post-${index}.png`
-writeFileSync(join(outDir, file), await renderPost(post, index))
-console.log(`Rendered ${file}: ${post.title}`)
+const file = `${BRAND}-${index}.png`
+writeFileSync(join(outDir, file), await BRANDS[BRAND].render(post, index))
+console.log(`Rendered ${file}: ${post.title || post.name}`)
 
 if (dry) {
   console.log('\n--- caption ---\n' + caption)

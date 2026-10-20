@@ -1,0 +1,98 @@
+[
+  {
+    "image": "groundnut-oil.jpg",
+    "name": "Wood Pressed Groundnut Oil",
+    "line": "Kachi ghani, unrefined, the traditional way",
+    "badges": ["No preservatives", "No additives", "1 Litre"],
+    "caption": "Cook like our grandmothers did. 🥜 Minutes of Wow Wood Pressed Groundnut Oil is kachi ghani and unrefined, made the traditional chekku way.",
+    "tags": ["woodpressedoil", "groundnutoil", "kachighani", "chekkuoil", "healthycooking", "traditionalfood"]
+  },
+  {
+    "image": "rava-idli.jpg",
+    "name": "Rava Idli Mix",
+    "line": "Soft, fluffy rava idli in minutes",
+    "badges": ["100% natural", "No preservatives", "200 g"],
+    "caption": "Hot, soft rava idlis without the long prep. ☀️ Our Rava Idli Mix is a traditional South Indian recipe, ready in minutes.",
+    "tags": ["ravaidli", "southindianbreakfast", "instantbreakfast", "idli", "breakfastideas", "homemadefood"]
+  },
+  {
+    "image": "guntur-chilli.jpg",
+    "name": "Guntur Chilli Powder",
+    "line": "Made from premium Guntur chillies",
+    "badges": ["100% natural", "No artificial colours", "No preservatives"],
+    "caption": "Real colour, real heat. 🌶️ Minutes of Wow Guntur Chilli Powder is made from premium Guntur chillies with no artificial colours or preservatives.",
+    "tags": ["gunturchilli", "chillipowder", "lalmirch", "indianspices", "andhrafood", "spices"]
+  },
+  {
+    "image": "sprouted-ragi-malt.jpg",
+    "name": "Sprouted Ragi Malt",
+    "line": "With cashew, almond, walnut & pistachio",
+    "badges": ["No preservatives", "Kids & adults", "200 g"],
+    "caption": "A warm glass of sprouted ragi malt, loaded with cashew, almond, walnut and pistachio. 🥛 A traditional South Indian recipe for the whole family.",
+    "tags": ["ragimalt", "ragi", "milletdrink", "healthydrink", "kidsnutrition", "fingermillet"]
+  },
+  {
+    "image": "cinnamon.jpg",
+    "name": "Whole Cinnamon Sticks",
+    "line": "Handpicked, with a rich aroma",
+    "badges": ["100% natural", "No preservatives", "Tea, biryani, baking"],
+    "caption": "One stick changes everything: chai, coffee, biryani, baking. 🍂 Minutes of Wow Whole Cinnamon is handpicked for a rich aroma.",
+    "tags": ["cinnamon", "dalchini", "wholespices", "biryani", "masalachai", "indianspices"]
+  },
+  {
+    "image": "millet-upma.jpg",
+    "name": "Millets Upma Mix",
+    "line": "Kodo & foxtail millet with vegetables",
+    "badges": ["100% natural", "Ready in 3 minutes", "200 g"],
+    "caption": "Millet breakfast in 3 minutes. 🌾 Our Millets Upma Instant Mix has a kodo and foxtail millet base with vegetables.",
+    "tags": ["milletupma", "millets", "healthybreakfast", "instantbreakfast", "foxtailmillet", "kodomillet"]
+  },
+  {
+    "image": "masala-chilli.jpg",
+    "name": "Masala Chilli Powder",
+    "line": "Chilli with coriander, cumin, garlic, turmeric & fenugreek",
+    "badges": ["Ready blend", "For curries & gravies", "200 g"],
+    "caption": "One spoon, full flavour. 🍛 Minutes of Wow Masala Chilli Powder blends red chilli with coriander, cumin, garlic, turmeric and fenugreek for curries and gravies.",
+    "tags": ["masalapowder", "currypowder", "indianspices", "indiancooking", "gravy", "spiceblend"]
+  },
+  {
+    "image": "white-pepper.jpg",
+    "name": "Whole White Pepper",
+    "line": "Premium whole white peppercorns",
+    "badges": ["Carefully selected", "Everyday cooking", "100 g"],
+    "caption": "Gentle heat, clean flavour. ⚪ Minutes of Wow Whole White Pepper: carefully selected peppercorns for soups, sauces and everyday cooking.",
+    "tags": ["whitepepper", "peppercorns", "wholespices", "indianspices", "cooking", "spices"]
+  },
+  {
+    "image": "ragi-malt.jpg",
+    "name": "Ragi Malt",
+    "line": "Instant finger millet drink mix",
+    "badges": ["High fibre", "Vegetarian", "200 g"],
+    "caption": "The traditional millet drink, made instant. 🥣 Minutes of Wow Ragi Malt is a nutritious finger millet beverage mix.",
+    "tags": ["ragimalt", "ragijava", "milletdrink", "fingermillet", "healthydrink", "traditionalfood"]
+  },
+  {
+    "image": "teja-chilli-1kg.jpg",
+    "name": "Guntur Teja Chilli Powder",
+    "line": "Pure Teja chilli, 1 kg pack",
+    "badges": ["No artificial colours", "No additives", "1 kg"],
+    "caption": "For kitchens that cook big. 🔥 Pure Guntur Teja chilli powder in a 1 kg pack, with no artificial colours or additives.",
+    "tags": ["tejachilli", "gunturchilli", "chillipowder", "bulkspices", "restaurantsupply", "indianspices"]
+  },
+  {
+    "image": "nutmeg.jpg",
+    "name": "Whole Nutmeg",
+    "line": "Hand selected, no additives",
+    "badges": ["Hand selected", "No additives", "50 g"],
+    "caption": "A little grated nutmeg goes a long way in sweets, biryani and garam masala. 🌰 Minutes of Wow Whole Nutmeg is hand selected with no additives.",
+    "tags": ["nutmeg", "jaiphal", "wholespices", "indianspices", "baking", "biryani"]
+  },
+  {
+    "image": "millet-upma-veg.jpg",
+    "name": "Multi Millet Upma Mix",
+    "line": "Millets, vegetables & traditional spices",
+    "badges": ["Ready to cook", "High fibre", "200 g"],
+    "caption": "A wholesome breakfast without the effort. 🥗 Our Multi Millet Upma Mix brings millets, vegetables and traditional spices together, ready to cook.",
+    "tags": ["upma", "millets", "healthybreakfast", "readytocook", "southindianfood", "breakfastideas"]
+  }
+]
