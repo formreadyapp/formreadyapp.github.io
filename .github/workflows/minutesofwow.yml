@@ -30,9 +30,15 @@ jobs:
         id: today
         run: |
           TODAY=$(TZ=Asia/Kolkata date +%F)
+          HOUR=$(TZ=Asia/Kolkata date +%-H)
           echo "date=$TODAY" >> "$GITHUB_OUTPUT"
-          # Any post commit made since midnight India time counts (manual runs included).
-          if git log --since="$TODAY 00:00 +0530" --format=%s | grep -q "Minutes of WOW post"; then
+          # GitHub can start a scheduled run hours late. Only post in the evening
+          # (5 PM to 11:59 PM India time); a run that starts after midnight is skipped.
+          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$HOUR" -lt 17 ] || [ "$HOUR" -gt 23 ]; }; then
+            echo "done=yes" >> "$GITHUB_OUTPUT"
+            echo "Outside the evening posting window (hour $HOUR IST)."
+          # Any post made since noon India time today counts (manual runs included).
+          elif git log --since="$TODAY 12:00 +0530" --format=%s | grep -q "Minutes of WOW post"; then
             echo "done=yes" >> "$GITHUB_OUTPUT"
             echo "Already posted today ($TODAY)."
           fi

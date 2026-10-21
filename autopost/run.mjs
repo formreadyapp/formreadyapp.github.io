@@ -53,7 +53,9 @@ const dry = args.includes('--dry')
 const dayArg = args.indexOf('--day')
 
 // Same post for the whole day, a different one tomorrow, no state to store.
-const dayNumber = dayArg >= 0 ? Number(args[dayArg + 1]) : Math.floor(Date.now() / 86400000)
+// Days are counted in India time, the same calendar the workflow uses.
+const IST_OFFSET_MS = 5.5 * 3600 * 1000
+const dayNumber = dayArg >= 0 ? Number(args[dayArg + 1]) : Math.floor((Date.now() + IST_OFFSET_MS) / 86400000)
 const index = ((dayNumber % posts.length) + posts.length) % posts.length
 const post = posts[index]
 const cta = BRANDS[BRAND].cta ? `\n\n${BRANDS[BRAND].cta}` : ''
