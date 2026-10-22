@@ -108,7 +108,24 @@ if (!IG_USER_ID) {
 
 // 1) Create the media container from the public image URL.
 const imageUrl = `${IMAGE_BASE_URL}/${file}`
-const container = await call(`${IG_USER_ID}/media`, { image_url: imageUrl, caption })
+// Wait until the just-pushed image is downloadable, then let Instagram fetch it
+// (retrying, since GitHub's file server can take a minute to serve a new file).
+for (let i = 0; i < 12; i++) {
+  const r = await fetch(imageUrl, { method: 'HEAD' })
+  if (r.ok) break
+  await new Promise((res) => setTimeout(res, 10000))
+}
+let container
+for (let attempt = 1; ; attempt++) {
+  try {
+    container = await call(`${IG_USER_ID}/media`, { image_url: imageUrl, caption })
+    break
+  } catch (e) {
+    if (attempt >= 4) throw e
+    console.log(`Instagram could not take the image yet (try ${attempt}): ${e.message}`)
+    await new Promise((res) => setTimeout(res, 20000))
+  }
+}
 
 // 2) Wait until Instagram has fetched and processed the image.
 for (let i = 0; i < 15; i++) {
